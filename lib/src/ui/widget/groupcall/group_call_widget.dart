@@ -35,6 +35,12 @@ class _GroupCallWidgetState extends State<GroupCallWidget> {
     } else {
       CallState.instance.isCameraOpen = false;
     }
+    Future.delayed(const Duration(seconds: 1)).then((value) {
+      if (CallState.instance.mediaType == TUICallMediaType.none) {
+        TUICallKitNavigatorObserver.getInstance().exitCallingPage();
+      }
+      // if();
+    });
   }
 
   @override
@@ -89,8 +95,9 @@ class _GroupCallWidgetState extends State<GroupCallWidget> {
       top: 15,
       right: 10,
       child: Visibility(
-        visible: TUICallStatus.accept == CallState.instance.selfUser.callStatus ||
-            TUICallRole.caller == CallState.instance.selfUser.callRole,
+        visible:
+            TUICallStatus.accept == CallState.instance.selfUser.callStatus ||
+                TUICallRole.caller == CallState.instance.selfUser.callRole,
         child: ExtendButton(
           imgUrl: TUICallMediaType.audio == CallState.instance.mediaType
               ? "assets/images/add_user_dark.png"
@@ -148,11 +155,14 @@ class _GroupCallWidgetState extends State<GroupCallWidget> {
 
   _buildTimingAndHintWidget() {
     return Positioned(
-        bottom: (TUICallMediaType.audio == CallState.instance.mediaType) ? 180 : 280,
+        bottom: (TUICallMediaType.audio == CallState.instance.mediaType)
+            ? 180
+            : 280,
         child: (TUICallStatus.accept == CallState.instance.selfUser.callStatus)
             ? const TimingWidget()
             : Visibility(
-                visible: TUICallStatus.waiting == CallState.instance.selfUser.callStatus &&
+                visible: TUICallStatus.waiting ==
+                        CallState.instance.selfUser.callStatus &&
                     TUICallRole.caller == CallState.instance.selfUser.callRole,
                 child: Center(
                   child: Text(CallKit_t("正在等待对方接受邀请……"),
@@ -177,8 +187,8 @@ class _GroupCallWidgetState extends State<GroupCallWidget> {
             borderRadius: BorderRadius.all(Radius.circular(15)),
           ),
           child: Image(
-            image: NetworkImage(
-                StringStream.makeNull(CallState.instance.caller.avatar, Constants.defaultAvatar)),
+            image: NetworkImage(StringStream.makeNull(
+                CallState.instance.caller.avatar, Constants.defaultAvatar)),
             fit: BoxFit.cover,
             errorBuilder: (ctx, err, stackTrace) => Image.asset(
               'assets/images/user_icon.png',
@@ -205,7 +215,8 @@ class _GroupCallWidgetState extends State<GroupCallWidget> {
           child: Wrap(
             spacing: 5,
             runSpacing: 5,
-            children: List.generate(CallState.instance.calleeList.length, ((index) {
+            children:
+                List.generate(CallState.instance.calleeList.length, ((index) {
               return Container(
                 height: 30,
                 width: 30,
@@ -214,7 +225,8 @@ class _GroupCallWidgetState extends State<GroupCallWidget> {
                 ),
                 child: Image(
                   image: NetworkImage(StringStream.makeNull(
-                      CallState.instance.calleeList[index].avatar, Constants.defaultAvatar)),
+                      CallState.instance.calleeList[index].avatar,
+                      Constants.defaultAvatar)),
                   fit: BoxFit.cover,
                   errorBuilder: (ctx, err, stackTrace) => Image.asset(
                     'assets/images/user_icon.png',
@@ -241,7 +253,8 @@ class _GroupCallWidgetState extends State<GroupCallWidget> {
         alignment: CallState.instance.remoteUserList.length == 2
             ? WrapAlignment.center
             : WrapAlignment.start,
-        children: List.generate(CallState.instance.remoteUserList.length + 1, (index) {
+        children: List.generate(CallState.instance.remoteUserList.length + 1,
+            (index) {
           User user = _getUserByViewIndex(index);
           return SizedBox(
             width: _getVideoViewWidthHeight(),
@@ -258,8 +271,8 @@ class _GroupCallWidgetState extends State<GroupCallWidget> {
                       borderRadius: BorderRadius.all(Radius.circular(0)),
                     ),
                     child: Image(
-                      image:
-                          NetworkImage(StringStream.makeNull(user.avatar, Constants.defaultAvatar)),
+                      image: NetworkImage(StringStream.makeNull(
+                          user.avatar, Constants.defaultAvatar)),
                       fit: BoxFit.cover,
                       errorBuilder: (ctx, err, stackTrace) => Image.asset(
                         'assets/images/user_icon.png',
@@ -269,7 +282,8 @@ class _GroupCallWidgetState extends State<GroupCallWidget> {
                   ),
                 ),
                 Visibility(
-                  visible: TUICallMediaType.video == CallState.instance.mediaType,
+                  visible:
+                      TUICallMediaType.video == CallState.instance.mediaType,
                   child: AnimatedOpacity(
                     duration: const Duration(milliseconds: 100),
                     opacity: user.videoAvailable ? 1.0 : 0,
@@ -310,7 +324,8 @@ class _GroupCallWidgetState extends State<GroupCallWidget> {
   }
 
   void _onPlatformViewCreated(User user, int viewId) {
-    debugPrint("_onPlatformViewCreated: user.id = ${user.id}, viewId = $viewId");
+    debugPrint(
+        "_onPlatformViewCreated: user.id = ${user.id}, viewId = $viewId");
     if (user.id == CallState.instance.selfUser.id) {
       CallState.instance.isCameraOpen = true;
       CallState.instance.selfUser.videoAvailable = true;
@@ -339,7 +354,8 @@ class _GroupCallWidgetState extends State<GroupCallWidget> {
   User _getUserByViewIndex(int index) {
     if (index == 0) {
       if (TUICallMediaType.video == CallState.instance.mediaType) {
-        CallState.instance.selfUser.videoAvailable = CallState.instance.isCameraOpen;
+        CallState.instance.selfUser.videoAvailable =
+            CallState.instance.isCameraOpen;
       } else {
         CallState.instance.selfUser.videoAvailable = false;
       }
@@ -352,10 +368,14 @@ class _GroupCallWidgetState extends State<GroupCallWidget> {
   _exitRoom() {}
 
   Color _getBackgroundColor() {
-    return (TUICallMediaType.audio == CallState.instance.mediaType) ? Colors.white : Colors.black;
+    return (TUICallMediaType.audio == CallState.instance.mediaType)
+        ? Colors.white
+        : Colors.black;
   }
 
   Color _getTextColor() {
-    return (TUICallMediaType.audio == CallState.instance.mediaType) ? Colors.black : Colors.white;
+    return (TUICallMediaType.audio == CallState.instance.mediaType)
+        ? Colors.black
+        : Colors.white;
   }
 }

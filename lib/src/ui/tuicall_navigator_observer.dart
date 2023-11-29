@@ -12,7 +12,6 @@ class TUICallKitNavigatorObserver extends NavigatorObserver {
   static CallPage currentPage = CallPage.none;
 
   static TUICallKitNavigatorObserver getInstance() {
-    _bootInit();
     return _instance;
   }
 
@@ -20,7 +19,8 @@ class TUICallKitNavigatorObserver extends NavigatorObserver {
     debugPrint("-------SHOULD NAVIGATE TO CALLING PAGE---------");
     currentPage = CallPage.callingPage;
     if (CallState.instance.mediaType == TUICallMediaType.none) {
-      debugPrint("CallState.instance.mediaType ${CallState.instance.mediaType}");
+      debugPrint(
+          "CallState.instance.mediaType ${CallState.instance.mediaType}");
       return;
     }
     TUICallKitNavigatorObserver.getInstance()
@@ -65,6 +65,10 @@ class TUICallKitNavigatorObserver extends NavigatorObserver {
   }
 
   static void _bootInit() {
+    TUICallKitPlatform.instance;
+  }
+
+  void bootInit2() {
     TUICallKitPlatform.instance;
   }
 }

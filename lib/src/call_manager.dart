@@ -27,9 +27,6 @@ class CallManager {
     eventBus.register(
       setStateEventOnCallReceived,
       (arg) async {
-        if (CallState.instance.mediaType == TUICallMediaType.none) {
-          return;
-        }
         if (Platform.isAndroid) {
           final permissionResult =
               await PermissionRequest.checkCallingPermission(
